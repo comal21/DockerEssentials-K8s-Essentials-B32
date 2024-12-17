@@ -161,19 +161,7 @@ apt install inetutils-ping
 ```
 ping 8.8.8.8
 ```
-Download the curl utility if not already available
 ```
-apt install curl
+docker inspect ct11
 ```
-```
-curl https://8.8.8.8
-```
-Also if you check the default port 80, the container would not be accessible.
 
-Press Ctrl+P+Q, to switch back to Host
-```
-docker inspect none
-```
-```
-docker network connect bridge ct11
-```
