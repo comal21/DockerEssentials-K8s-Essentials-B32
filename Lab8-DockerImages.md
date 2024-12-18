@@ -29,13 +29,13 @@ CTRL+P+Q
 docker image ls
 ```
 ```
-docker commit ct1 ubuntu:mehar
+docker commit ct1 ubuntu:newimage
 ```
 ```
 docker image ls
 ```
 ```
-docker run -it --name ct2 ubuntu:mehar
+docker run -it --name ct2 ubuntu:newimage
 ```
 ```
 curl
@@ -48,12 +48,18 @@ tree
 ```
 CTRL+P+Q
 ```
-docker history ubuntu:latest
+docker ps 
+```
+Clean up
+```
+docker stop $(docker ps -a -q)
 ```
 ```
-docker history ubuntu:mehar
+docker rm $(docker ps -a -q)
 ```
-
+```
+docker ps -a
+```
 
 ### Task 2: Automation - Using Dockerfile to build docker image.
 ```
