@@ -387,4 +387,5 @@ kops get cluster
 ```
 kops export kubeconfig --admin
 ```
-
+Stop the Jumpserver at the end of each session.
+Downgrade the master and worker nodes by navigating to the ASG -> edit and change the count to 0.
