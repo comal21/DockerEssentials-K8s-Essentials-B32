@@ -62,3 +62,7 @@ kubectl get pods -o wide
  ```
 kubectl describe pod httpd-pod
 ```
+## Cleanup
+```
+kubectl delete pod httpd-pod
+```
