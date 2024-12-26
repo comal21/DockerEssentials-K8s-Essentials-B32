@@ -72,6 +72,10 @@ cd /usr/share/nginx/html/
 ```
 ls
 ```
+Cleanup
+```
+kubectl delete -f hp.yaml
+```
 
 # Task 2 : Creating Deployment with emptyDir
 --------------------------------------------------------------------------
@@ -129,9 +133,6 @@ kubectl exec -it <pod-name> -c <ctr-name> -- /bin/bash
 -----------------------------------------------------------------------------
 ## Delete the resources created during the lab:
 ```
-kubectl delete -f hp.yaml
-```
-```
 kubectl delete -f empty.yaml
 ```
-```
+
