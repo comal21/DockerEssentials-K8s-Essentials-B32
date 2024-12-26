@@ -1,5 +1,6 @@
 # Task 1 : Creating Deployment with hostPath
 --------------------------------------------------------------------------
+
 ## Create a file named hp.yaml using content given below
 ```
 vi hp.yaml
@@ -35,14 +36,42 @@ kubectl apply -f hp.yaml
 ## View the objects created by Kubernetesand verify hostPath mounting in POD
 
 ```
-kubectl get pods
+kubectl get pods -o wide
 ```
 ```
 kubectl describe pod <pod-name>
 ```
+Steps to create pvdir:
+SSH into the node:
+```
+ssh ubuntu@<node-ip>
+```
+
+Create the directory:
+```
+sudo mkdir -p /pvdir
+```
+```
+cd /pvdir/
+```
+```
+sudo chmod 777 /pvdir
+```
+```
+touch file1 file2
+```
+```
+exit
+```
 ## Access shell on a container running in your Pod to verify volume
 ```
-kubectl exec -it <pod-name> -- /bin/bash
+kubectl exec -it web-app -- /bin/bash
+```
+```
+cd /usr/share/nginx/html/
+```
+```
+ls
 ```
 
 # Task 2 : Creating Deployment with emptyDir
