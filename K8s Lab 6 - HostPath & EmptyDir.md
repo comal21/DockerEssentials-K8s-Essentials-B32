@@ -1,6 +1,27 @@
 # Task 1 : Creating Deployment with hostPath
 --------------------------------------------------------------------------
+Steps to create pvdir:
+SSH into the node:
+```
+ssh ubuntu@<node-ip>
+```
 
+Create the directory:
+```
+sudo mkdir -p /pvdir
+```
+```
+cd /pvdir/
+```
+```
+sudo chmod 777 /pvdir
+```
+```
+touch file1 file2
+```
+```
+exit
+```
 ## Create a file named hp.yaml using content given below
 ```
 vi hp.yaml
@@ -40,28 +61,6 @@ kubectl get pods -o wide
 ```
 ```
 kubectl describe pod <pod-name>
-```
-Steps to create pvdir:
-SSH into the node:
-```
-ssh ubuntu@<node-ip>
-```
-
-Create the directory:
-```
-sudo mkdir -p /pvdir
-```
-```
-cd /pvdir/
-```
-```
-sudo chmod 777 /pvdir
-```
-```
-touch file1 file2
-```
-```
-exit
 ```
 ## Access shell on a container running in your Pod to verify volume
 ```
