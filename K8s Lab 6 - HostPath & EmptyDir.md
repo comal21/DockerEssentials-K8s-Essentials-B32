@@ -124,10 +124,16 @@ kubectl describe pod <pod-name>
 ```
 ## Access shell on a container running in your Pod to verify volume
 ```
-kubectl exec -it <pod-name> -c <ctr-name> -- /bin/bash
+kubectl exec -it multi-ctr-app -c ctr-1 -- /bin/bash
 ```
 ```
-kubectl exec -it <pod-name> -c <ctr-name> -- /bin/bash
+exit
+```
+```
+kubectl exec -it multi-ctr-app  -c ctr-2 -- /bin/sh
+```
+```
+exit
 ```
 ## Check the emptydir
 ```
