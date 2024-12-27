@@ -1,75 +1,117 @@
-## Creating pvc 
+## Step 1: Verify the Default StorageClass
+Check if a StorageClass exists and supports dynamic provisioning:
 ```
-vi pv-claim.yaml
+kubectl get storageclass
+```
+Expected Output:
+![image](https://github.com/user-attachments/assets/b01b065f-4121-4037-ae49-c856fe05fb82)
+
+```
+vi pvc-dynamic.yaml
 ```
 ```
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: sc-claim
+  name: dynamic-pvc
 spec:
-  storageClassName: gp2
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 8Gi
+      storage: 5Gi
 ```
-## apply the above yaml 
-```
-kubectl apply -f pv-claim.yaml
-```
-
-## verify the pv and pvc
-
+## Step 2: Verify PVC and PV Binding
+Since the kops-csi-1-21 StorageClass uses WaitForFirstConsumer, the PersistentVolume (PV) will not be provisioned until a pod is scheduled to use it. Check the PVC status:
 ```
 kubectl get pvc
 ```
-```
-kubectl get pv
-```
+Expected output:
 
-# Create deployment
+NAME          STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS      AGE
+dynamic-pvc   Pending   <none>   <none>     <none>         kops-csi-1-21    10s
 
-```
-vi ng-deploy.yaml
-```
+This indicates that the PV is waiting for a pod to bind to it.
+
+## Step 3: Create a Deployment Using the PVC
+Create a deployment that uses the PVC. Save the following YAML as nginx-deployment.yaml:
 ```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: ng-deploy
-  name: ng-deploy
+  name: nginx-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: ng-pod
+      app: nginx
   template:
     metadata:
       labels:
-        app: ng-pod
+        app: nginx
     spec:
-      volumes:
-      - name: cloud-storage
-        persistentVolumeClaim:
-          claimName: sc-claim
       containers:
-      - image: nginx
-        name: nginx-ctr
+      - name: nginx
+        image: nginx
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: cloud-storage
-          mountPath: /usr/share/nginx/html
+        - mountPath: /usr/share/nginx/html
+          name: pvc-storage
+      volumes:
+      - name: pvc-storage
+        persistentVolumeClaim:
+          claimName: dynamic-pvc
 ```
-## verify deployment
+Apply the deployment:
+```
+kubectl apply -f nginx-deployment.yaml
+```
 
+## Step 4: Verify Resource Binding
+Check the PVC status again:
 ```
-kubectl get deploy
+kubectl get pvc
 ```
+The STATUS should change to Bound.
+
+Check the dynamically provisioned PV:
+```
+kubectl get pv
+```
+Verify the pod is running:
 ```
 kubectl get pods
 ```
 
+## Step 5: Test the Storage
+Access the pod:
+
+```
+kubectl exec -it <pod-name> -- /bin/bash
+```
+Navigate to the mounted volume:
+```
+cd /usr/share/nginx/html
+```
+Create a test file:
+```
+echo "Kops CSI Dynamic Provisioning Test" > index.html
+```
+Exit the pod:
+```
+exit
+```
+Port-forward to access the pod:
+```
+kubectl port-forward <pod-name> 8080:80
+```
+
+## Open a browser and navigate to http://localhost:8080. You should see the content of the index.html file.
+
+## Step 6: Clean Up
+To remove all created resources:
+```
+kubectl delete deploy nginx-deployment
+kubectl delete pvc dynamic-pvc
+```
