@@ -21,6 +21,9 @@ spec:
     requests:
       storage: 5Gi
 ```
+```
+kubectl apply -f pvc-dynamic.yaml
+```
 ## Step 2: Verify PVC and PV Binding
 Since the kops-csi-1-21 StorageClass uses WaitForFirstConsumer, the PersistentVolume (PV) will not be provisioned until a pod is scheduled to use it. Check the PVC status:
 ```
