@@ -1,4 +1,4 @@
-Lab 6 - StatefulSet Implementation
+Lab 9 - StatefulSet Implementation
 =============================================================
 
 # Task1 - Create Stateful Set
